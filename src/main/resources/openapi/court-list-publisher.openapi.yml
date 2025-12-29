@@ -1,0 +1,110 @@
+openapi: 3.0.3
+servers:
+  - description: APIHub API Auto Mocking Scheduling and Listing court-schedule
+    url: https://virtserver.swaggerhub.com/HMCTS-DTS//api-cp-crime-court-list-publisher/0.0.0
+
+info:
+  title: Common Platform API Crime Court List Publisher
+  description: API for court list publishing service
+  version: 0.0.0
+  contact:
+    email: no-reply@hmcts.com
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+
+paths:
+
+  /api/files/list:
+    get:
+      summary: List files in folder
+      description: Retrieves a list of files from the specified folder in Azure Blob Storage. If no folder is specified, lists files from the root.
+      operationId: listFiles
+      tags:
+        - files
+      parameters:
+        - in: query
+          name: folder
+          required: false
+          description: The folder path to list files from. If not provided, lists files from the root.
+          schema:
+            type: string
+            default: ""
+          example: "documents"
+      responses:
+        '200':
+          description: Successfully retrieved list of files
+          content:
+            application/vnd.courtlistpublishing-service.files+json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FileInfo"
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FileInfo"
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error context
+        timestamp:
+          type: string
+          format: date-time
+        traceId:
+          type: string
+          description: Unique identifier for error tracing
+
+    FileInfo:
+      description: Information about a file stored in Azure Blob Storage
+      type: object
+      required:
+        - name
+        - path
+        - url
+        - size
+      properties:
+        name:
+          description: The name of the file
+          type: string
+          example: "court-list-2024-01-15.pdf"
+        path:
+          description: The full path to the file within the storage container
+          type: string
+          example: "documents/court-list-2024-01-15.pdf"
+        url:
+          description: The URL to access the file
+          type: string
+          format: uri
+          example: "https://storageaccount.blob.core.windows.net/container/documents/court-list-2024-01-15.pdf"
+        size:
+          description: The size of the file in bytes
+          type: integer
+          format: int64
+          example: 1048576
