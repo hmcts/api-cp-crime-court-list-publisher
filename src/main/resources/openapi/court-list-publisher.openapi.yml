@@ -15,6 +15,91 @@ info:
 
 paths:
 
+  /api/court-list-publish/publish:
+    post:
+      summary: Publish court list
+      description: Creates or updates a court list publish status
+      operationId: publishCourtList
+      tags:
+        - court-list-publish
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourtListPublishRequest"
+      responses:
+        '200':
+          description: Successfully created or updated court list publish status
+          content:
+            application/vnd.courtlistpublishing-service.publish.post+json:
+              schema:
+                $ref: "#/components/schemas/CourtListPublishResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourtListPublishResponse"
+        '400':
+          description: Bad request - invalid request body or missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/court-list-publish/court-centre/{courtCentreId}:
+    get:
+      summary: Get court list publish statuses by court centre ID
+      description: Retrieves all court list publish statuses for a specific court centre
+      operationId: findCourtListPublishByCourtCenterId
+      tags:
+        - court-list-publish
+      parameters:
+        - in: path
+          name: courtCentreId
+          required: true
+          description: The UUID of the court centre
+          schema:
+            type: string
+            format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Successfully retrieved court list publish statuses
+          content:
+            application/vnd.courtlistpublishing-service.publish.get+json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CourtListPublishResponse"
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CourtListPublishResponse"
+        '400':
+          description: Bad request - invalid court centre ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '404':
+          description: Court centre not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /api/files/list:
     get:
       summary: List files in folder
@@ -108,3 +193,82 @@ components:
           type: integer
           format: int64
           example: 1048576
+
+    CourtListPublishRequest:
+      description: Request to publish a court list
+      type: object
+      required:
+        - courtListId
+        - courtCentreId
+        - publishStatus
+        - courtListType
+      properties:
+        courtListId:
+          description: The UUID of the court list
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        courtCentreId:
+          description: The UUID of the court centre
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        publishStatus:
+          description: The publish status of the court list
+          type: string
+          example: "PUBLISHED"
+        courtListType:
+          description: The type of court list
+          type: string
+          example: "DAILY"
+
+    CourtListPublishResponse:
+      description: Response containing court list publish status information
+      type: object
+      required:
+        - courtListId
+        - courtCentreId
+        - publishStatus
+        - courtListType
+      properties:
+        courtListId:
+          description: The UUID of the court list
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        courtCentreId:
+          description: The UUID of the court centre
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        publishStatus:
+          description: The publish status of the court list
+          type: string
+          example: "PUBLISHED"
+        courtListType:
+          description: The type of court list
+          type: string
+          example: "DAILY"
+        lastUpdated:
+          description: The timestamp when the publish status was last updated
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        courtListFileId:
+          description: The UUID of the court list file
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        fileName:
+          description: The name of the court list file
+          type: string
+          example: "court-list-2024-01-15.pdf"
+        errorMessage:
+          description: Error message if publishing failed
+          type: string
+          example: "Failed to upload file"
+        publishDate:
+          description: The date when the court list was published
+          type: string
+          format: date
+          example: "2024-01-15"
