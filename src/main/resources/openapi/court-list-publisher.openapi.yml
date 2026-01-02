@@ -165,6 +165,17 @@ components:
         - FIRM
       example: "STANDARD"
 
+    PublishStatus:
+      description: The publish status of the court list
+      type: string
+      enum:
+        - INVALID_STATUS
+        - EXPORT_FAILED
+        - EXPORT_SUCCESSFUL
+        - COURT_LIST_PRODUCED
+        - COURT_LIST_REQUESTED
+      example: "COURT_LIST_REQUESTED"
+
     ErrorResponse:
       type: object
       properties:
@@ -233,9 +244,7 @@ components:
           format: uuid
           example: "123e4567-e89b-12d3-a456-426614174001"
         publishStatus:
-          description: The publish status of the court list
-          type: string
-          example: "PUBLISHED"
+          $ref: "#/components/schemas/PublishStatus"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
 
@@ -259,9 +268,7 @@ components:
           format: uuid
           example: "123e4567-e89b-12d3-a456-426614174001"
         publishStatus:
-          description: The publish status of the court list
-          type: string
-          example: "PUBLISHED"
+          $ref: "#/components/schemas/PublishStatus"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
         lastUpdated:
