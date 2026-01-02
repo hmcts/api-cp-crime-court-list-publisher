@@ -146,6 +146,25 @@ paths:
 components:
   schemas:
 
+    CourtListType:
+      description: The type of court list
+      type: string
+      enum:
+        - ALPHABETICAL
+        - PUBLIC
+        - STANDARD
+        - BENCH
+        - JUDGE
+        - USHERS_CROWN
+        - USHERS_MAGISTRATE
+        - ONLINE_PUBLIC
+        - PRISON
+        - WARN
+        - DRAFT
+        - FINAL
+        - FIRM
+      example: "STANDARD"
+
     ErrorResponse:
       type: object
       properties:
@@ -218,23 +237,7 @@ components:
           type: string
           example: "PUBLISHED"
         courtListType:
-          description: The type of court list
-          type: string
-          enum:
-            - ALPHABETICAL
-            - PUBLIC
-            - STANDARD
-            - BENCH
-            - JUDGE
-            - USHERS_CROWN
-            - USHERS_MAGISTRATE
-            - ONLINE_PUBLIC
-            - PRISON
-            - WARN
-            - DRAFT
-            - FINAL
-            - FIRM
-          example: "STANDARD"
+          $ref: "#/components/schemas/CourtListType"
 
     CourtListPublishResponse:
       description: Response containing court list publish status information
@@ -260,23 +263,7 @@ components:
           type: string
           example: "PUBLISHED"
         courtListType:
-          description: The type of court list
-          type: string
-          enum:
-            - ALPHABETICAL
-            - PUBLIC
-            - STANDARD
-            - BENCH
-            - JUDGE
-            - USHERS_CROWN
-            - USHERS_MAGISTRATE
-            - ONLINE_PUBLIC
-            - PRISON
-            - WARN
-            - DRAFT
-            - FINAL
-            - FIRM
-          example: "STANDARD"
+          $ref: "#/components/schemas/CourtListType"
         lastUpdated:
           description: The timestamp when the publish status was last updated
           type: string
