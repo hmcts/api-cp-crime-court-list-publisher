@@ -220,7 +220,21 @@ components:
         courtListType:
           description: The type of court list
           type: string
-          example: "DAILY"
+          enum:
+            - ALPHABETICAL
+            - PUBLIC
+            - STANDARD
+            - BENCH
+            - JUDGE
+            - USHERS_CROWN
+            - USHERS_MAGISTRATE
+            - ONLINE_PUBLIC
+            - PRISON
+            - WARN
+            - DRAFT
+            - FINAL
+            - FIRM
+          example: "STANDARD"
 
     CourtListPublishResponse:
       description: Response containing court list publish status information
@@ -248,7 +262,21 @@ components:
         courtListType:
           description: The type of court list
           type: string
-          example: "DAILY"
+          enum:
+            - ALPHABETICAL
+            - PUBLIC
+            - STANDARD
+            - BENCH
+            - JUDGE
+            - USHERS_CROWN
+            - USHERS_MAGISTRATE
+            - ONLINE_PUBLIC
+            - PRISON
+            - WARN
+            - DRAFT
+            - FINAL
+            - FIRM
+          example: "STANDARD"
         lastUpdated:
           description: The timestamp when the publish status was last updated
           type: string
