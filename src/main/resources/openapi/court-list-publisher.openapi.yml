@@ -25,7 +25,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          application/vnd.courtlistpublishing-service.publish.post+json:
             schema:
               $ref: "#/components/schemas/CourtListPublishRequest"
       responses:
@@ -76,11 +76,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/CourtListPublishResponse"
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CourtListPublishResponse"
         '400':
           description: Bad request - invalid court centre ID
           content:
@@ -121,11 +116,6 @@ paths:
           description: Successfully retrieved list of files
           content:
             application/vnd.courtlistpublishing-service.files+json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/FileInfo"
-            application/json:
               schema:
                 type: array
                 items:
