@@ -225,26 +225,17 @@ components:
           example: 1048576
 
     CourtListPublishRequest:
-      description: Request to publish a court list
+      description: Request to publish a court list. The courtListId is generated internally by the backend, and publishStatus is set to COURT_LIST_REQUESTED.
       type: object
       required:
-        - courtListId
         - courtCentreId
-        - publishStatus
         - courtListType
       properties:
-        courtListId:
-          description: The UUID of the court list
-          type: string
-          format: uuid
-          example: "123e4567-e89b-12d3-a456-426614174000"
         courtCentreId:
           description: The UUID of the court centre
           type: string
           format: uuid
           example: "123e4567-e89b-12d3-a456-426614174001"
-        publishStatus:
-          $ref: "#/components/schemas/PublishStatus"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
 
