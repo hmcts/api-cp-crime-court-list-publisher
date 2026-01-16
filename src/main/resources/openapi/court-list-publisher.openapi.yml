@@ -159,11 +159,9 @@ components:
       description: The publish status of the court list
       type: string
       enum:
-        - INVALID_STATUS
-        - EXPORT_FAILED
-        - EXPORT_SUCCESSFUL
-        - COURT_LIST_PRODUCED
-        - COURT_LIST_REQUESTED
+        - PUBLISH_REQUESTED
+        - PUBLISH_SUCCESSFUL
+        - PUBLISH_FAILED
       example: "COURT_LIST_REQUESTED"
 
     ErrorResponse:
