@@ -162,7 +162,7 @@ components:
         - PUBLISH_REQUESTED
         - PUBLISH_SUCCESSFUL
         - PUBLISH_FAILED
-      example: "COURT_LIST_REQUESTED"
+      example: "PUBLISH_REQUESTED"
 
     ErrorResponse:
       type: object
