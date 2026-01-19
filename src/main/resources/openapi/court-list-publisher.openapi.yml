@@ -218,12 +218,29 @@ components:
       required:
         - courtCentreId
         - courtListType
+        - startDate
+        - endDate
       properties:
         courtCentreId:
           description: The UUID of the court centre
           type: string
           format: uuid
           example: "123e4567-e89b-12d3-a456-426614174001"
+        courtRoomId:
+          description: The UUID of the court centre
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        startDate:
+          description: Hearing start date in format 'YYYY-MM-DD'
+          type: string
+          format: date
+          example: "2024-01-15"
+        endDate:
+          description: Hearing end date in format 'YYYY-MM-DD'
+          type: string
+          format: date
+          example: "2024-01-15"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
 
