@@ -155,14 +155,15 @@ components:
         - FIRM
       example: "STANDARD"
 
-    PublishStatus:
-      description: The publish status of the court list
+    Status:
+      description: A generic status that can be used for various operations
       type: string
       enum:
-        - PUBLISH_REQUESTED
-        - PUBLISH_SUCCESSFUL
-        - PUBLISH_FAILED
-      example: "PUBLISH_REQUESTED"
+        - REQUESTED
+        - IN_PROGRESS
+        - SUCCESSFUL
+        - FAILED
+      example: "REQUESTED"
 
     ErrorResponse:
       type: object
@@ -226,11 +227,6 @@ components:
           type: string
           format: uuid
           example: "123e4567-e89b-12d3-a456-426614174001"
-        courtRoomId:
-          description: The UUID of the court centre
-          type: string
-          format: uuid
-          example: "123e4567-e89b-12d3-a456-426614174001"
         startDate:
           description: Hearing start date in format 'YYYY-MM-DD'
           type: string
@@ -264,7 +260,9 @@ components:
           format: uuid
           example: "123e4567-e89b-12d3-a456-426614174001"
         publishStatus:
-          $ref: "#/components/schemas/PublishStatus"
+          $ref: "#/components/schemas/Status"
+        fileStatus:
+          $ref: "#/components/schemas/Status"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
         lastUpdated:
@@ -281,10 +279,14 @@ components:
           description: The name of the court list file
           type: string
           example: "court-list-2024-01-15.pdf"
-        errorMessage:
-          description: Error message if publishing failed
+        fileErrorMessage:
+          description: Error message if file upload failed
           type: string
           example: "Failed to upload file"
+        publishErrorMessage:
+          description: Error message if publishing failed
+          type: string
+          example: "Failed to publish file"
         publishDate:
           description: The date when the court list was published
           type: string
