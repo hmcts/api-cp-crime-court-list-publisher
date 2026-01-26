@@ -160,7 +160,6 @@ components:
       type: string
       enum:
         - REQUESTED
-        - IN_PROGRESS
         - SUCCESSFUL
         - FAILED
       example: "REQUESTED"
