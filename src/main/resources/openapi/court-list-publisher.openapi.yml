@@ -54,7 +54,7 @@ paths:
   /api/court-list-publish/court-centre/{courtCentreId}:
     get:
       summary: Get court list publish statuses by court centre ID
-      description: Retrieves all court list publish statuses for a specific court centre
+      description: Retrieves court list publish status for a specific court centre, court list type, and publish date
       operationId: findCourtListPublishByCourtCenterId
       tags:
         - court-list-publish
@@ -67,23 +67,36 @@ paths:
             type: string
             format: uuid
           example: "123e4567-e89b-12d3-a456-426614174000"
+        - in: query
+          name: courtListType
+          required: true
+          description: The type of court list
+          schema:
+            $ref: "#/components/schemas/CourtListType"
+          example: "STANDARD"
+        - in: query
+          name: publishDate
+          required: true
+          description: The publish date in format 'YYYY-MM-DD'
+          schema:
+            type: string
+            format: date
+          example: "2024-01-15"
       responses:
         '200':
-          description: Successfully retrieved court list publish statuses
+          description: Successfully retrieved court list publish status
           content:
             application/vnd.courtlistpublishing-service.publish.get+json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CourtListPublishResponse"
+                $ref: "#/components/schemas/CourtListPublishResponse"
         '400':
-          description: Bad request - invalid court centre ID
+          description: Bad request - invalid parameters (court centre ID, court list type, or publish date)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         '404':
-          description: Court centre not found
+          description: Court list publish status not found for the given parameters
           content:
             application/json:
               schema:
