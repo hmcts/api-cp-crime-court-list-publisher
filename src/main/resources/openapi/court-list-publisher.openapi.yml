@@ -258,6 +258,13 @@ components:
           example: "2024-01-15"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
+        makeExternalCalls:
+          description: |
+            Temporary flag (to be removed by 2026-03-01). When true, the task will call CaTH and generate/upload PDF.
+            When false (default), external calls are skipped (mock mode).
+          type: boolean
+          default: false
+          example: false
 
     CourtListPublishResponse:
       description: Response containing court list publish status information
