@@ -404,6 +404,10 @@ components:
           example: "public"
         courtCentreName:
           type: string
+        courtCentreDefaultStartTime:
+          type: string
+          description: Default start time for the court centre (e.g. "10:00:00")
+          example: "10:00:00"
         courtCentreAddress1:
           type: string
         courtCentreAddress2:
