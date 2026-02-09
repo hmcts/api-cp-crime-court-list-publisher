@@ -119,8 +119,8 @@ paths:
     get:
       summary: Get court list data
       description: |
-        Returns court list data as JSON. Calls listing and reference data only (no progression).
-        Same data shape as progression GET /courtlistdata (listing payload + ouCode/courtId).
+        Returns court list data as JSON from listing and reference data.
+        Listing payload with optional ouCode/courtId from reference data.
       operationId: getCourtlistData
       tags:
         - court-list-publish
@@ -174,10 +174,7 @@ paths:
         '200':
           description: Court list data (listing payload with optional ouCode/courtId from reference data)
           content:
-            application/vnd.progression.search.court.list.data+json:
-              schema:
-                $ref: "#/components/schemas/CourtListData"
-            application/json:
+            application/vnd.courtlistpublishing-service.publish.courtlistdata+json:
               schema:
                 $ref: "#/components/schemas/CourtListData"
         '403':
@@ -399,7 +396,7 @@ components:
           example: "2024-01-15"
 
     CourtListData:
-      description: Court list data from listing (same shape as progression GET /courtlistdata). Listing payload plus optional ouCode/courtId from reference data.
+      description: Court list data from listing and reference data. Listing payload plus optional ouCode/courtId from reference data.
       type: object
       properties:
         listType:
