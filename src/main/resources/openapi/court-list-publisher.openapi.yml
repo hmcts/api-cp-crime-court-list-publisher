@@ -421,7 +421,7 @@ components:
         hearingDates:
           type: array
           items:
-            type: object
+            $ref: "#/components/schemas/HearingDateEntry"
         templateName:
           type: string
           example: "PublicCourtList"
@@ -431,3 +431,147 @@ components:
         courtId:
           type: string
           description: Court centre ID from reference data
+
+    HearingDateEntry:
+      description: Court list data for a single hearing date
+      type: object
+      properties:
+        hearingDate:
+          type: string
+          format: date
+          description: The hearing date (YYYY-MM-DD)
+        hearingDateWelsh:
+          type: string
+          description: Welsh translation of the hearing date
+        courtRooms:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourtRoomEntry"
+
+    CourtRoomEntry:
+      description: Court room with timeslots and hearings
+      type: object
+      properties:
+        courtRoomName:
+          type: string
+        welshCourtRoomName:
+          type: string
+        judiciaryNames:
+          type: string
+        welshJudiciaryNames:
+          type: string
+        timeslots:
+          type: array
+          items:
+            $ref: "#/components/schemas/Timeslot"
+
+    Timeslot:
+      description: A time slot containing one or more hearings
+      type: object
+      properties:
+        hearings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Hearing"
+
+    Hearing:
+      description: A single hearing within the court list
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        sequence:
+          type: integer
+        reportingRestrictionReason:
+          type: string
+        welshReportingRestrictionReason:
+          type: string
+        startTime:
+          type: string
+          description: Time in HH:mm format
+        hearingType:
+          type: string
+        welshHearingType:
+          type: string
+        caseNumber:
+          type: string
+        caseId:
+          type: string
+          format: uuid
+        prosecutorType:
+          type: string
+        hearingPublicListNote:
+          type: string
+        defendants:
+          type: array
+          items:
+            $ref: "#/components/schemas/Defendant"
+        adjournedHearingDate:
+          type: string
+
+    Defendant:
+      description: Defendant in a hearing
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organisationName:
+          type: string
+        welshOrganisationName:
+          type: string
+        firstName:
+          type: string
+        surname:
+          type: string
+        welshSurname:
+          type: string
+        dateOfBirth:
+          type: string
+        age:
+          type: string
+        nationality:
+          type: string
+        address:
+          $ref: "#/components/schemas/CourtListAddress"
+        reportingRestrictions:
+          type: array
+          items:
+            type: object
+          description: List of reporting restriction entries
+        offences:
+          type: array
+          items:
+            $ref: "#/components/schemas/Offence"
+
+    CourtListAddress:
+      description: Address used in court list data (defendant address etc.)
+      type: object
+      properties:
+        address1:
+          type: string
+        address2:
+          type: string
+        address3:
+          type: string
+        address4:
+          type: string
+        address5:
+          type: string
+        postcode:
+          type: string
+
+    Offence:
+      description: Offence linked to a defendant
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        offenceTitle:
+          type: string
+        welshOffenceTitle:
+          type: string
+        offenceWording:
+          type: string
