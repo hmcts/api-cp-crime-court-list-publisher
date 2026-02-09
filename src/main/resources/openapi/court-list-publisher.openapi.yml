@@ -115,6 +115,90 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /api/court-list-publish/courtlistdata:
+    get:
+      summary: Get court list data
+      description: |
+        Returns court list data as JSON. Calls listing and reference data only (no progression).
+        Same data shape as progression GET /courtlistdata (listing payload + ouCode/courtId).
+      operationId: getCourtlistData
+      tags:
+        - court-list-publish
+      parameters:
+        - in: query
+          name: courtCentreId
+          required: true
+          description: Reference data ID for the court centre
+          schema:
+            type: string
+            format: uuid
+          example: "f8254db1-1683-483e-afb3-b87fde5a0a26"
+        - in: query
+          name: courtRoomId
+          required: false
+          description: Reference data ID for the court room (optional)
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: listId
+          required: true
+          description: Court list type (e.g. PUBLIC, STANDARD, USHERS_CROWN, USHERS_MAGISTRATE). PRISON not supported.
+          schema:
+            $ref: "#/components/schemas/CourtListType"
+          example: "STANDARD"
+        - in: query
+          name: startDate
+          required: true
+          description: Hearing start date in format 'YYYY-MM-DD'
+          schema:
+            type: string
+            format: date
+          example: "2024-01-15"
+        - in: query
+          name: endDate
+          required: true
+          description: Hearing end date in format 'YYYY-MM-DD'
+          schema:
+            type: string
+            format: date
+          example: "2024-01-15"
+        - in: query
+          name: restricted
+          required: false
+          description: For standard list, set true to get restricted list. Default false.
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Court list data (listing payload with optional ouCode/courtId from reference data)
+          content:
+            application/vnd.progression.search.court.list.data+json:
+              schema:
+                $ref: "#/components/schemas/CourtListData"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourtListData"
+        '403':
+          description: Forbidden (e.g. PRISON listId not supported)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '400':
+          description: Bad request - missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /api/files/list:
     get:
       summary: List files in folder
@@ -313,3 +397,36 @@ components:
           type: string
           format: date
           example: "2024-01-15"
+
+    CourtListData:
+      description: Court list data from listing (same shape as progression GET /courtlistdata). Listing payload plus optional ouCode/courtId from reference data.
+      type: object
+      properties:
+        listType:
+          type: string
+          example: "public"
+        courtCentreName:
+          type: string
+        courtCentreAddress1:
+          type: string
+        courtCentreAddress2:
+          type: string
+        welshCourtCentreName:
+          type: string
+        welshCourtCentreAddress1:
+          type: string
+        welshCourtCentreAddress2:
+          type: string
+        hearingDates:
+          type: array
+          items:
+            type: object
+        templateName:
+          type: string
+          example: "PublicCourtList"
+        ouCode:
+          type: string
+          description: Organisation unit code from reference data
+        courtId:
+          type: string
+          description: Court centre ID from reference data
