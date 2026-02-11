@@ -431,6 +431,9 @@ components:
         courtId:
           type: string
           description: Court centre ID from reference data
+        courtIdNumeric:
+          type: string
+          description: Court ID numeric from reference data
 
     HearingDateEntry:
       description: Court list data for a single hearing date
