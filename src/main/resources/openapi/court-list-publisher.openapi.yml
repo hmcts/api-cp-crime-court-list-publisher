@@ -234,6 +234,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /api/files/download/{fileId}:
+    get:
+      summary: Download file by ID
+      description: |
+        Streams the file named {fileId}.pdf from blob storage. The response is streamed to handle large files efficiently.
+      operationId: downloadFile
+      tags:
+        - files
+      parameters:
+        - in: path
+          name: fileId
+          required: true
+          description: The UUID of the file to download. The blob is stored as {fileId}.pdf
+          schema:
+            type: string
+            format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174002"
+      responses:
+        '200':
+          description: Successfully streaming the file. Content is application/pdf.
+          headers:
+            Content-Disposition:
+              description: Attachment filename as {fileId}.pdf
+              schema:
+                type: string
+                example: "attachment; filename=\"123e4567-e89b-12d3-a456-426614174002.pdf\""
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
 
