@@ -381,6 +381,11 @@ components:
           description: The name of the court list file or its URL
           type: string
           example: "https://sastecourtlistpublisher.blob.core.windows.net/courtpublisher-blob-container/Online%20Public%20court%20list%20-%20Lavender%20Hill%20Magistrates'%20Court%2C%20All%20courtrooms%20-%2026-01-2026.pdf?st=2026-01-26T13:22:49Z&se=2026-12-31T21:37:49Z&moreParam=111"
+        fileId:
+          description: The UUID of the court list file in blob storage or document store
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174002"
         fileErrorMessage:
           description: Error message if file upload failed
           type: string
