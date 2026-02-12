@@ -234,19 +234,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /api/files/download/{fileId}:
+  /api/files/stream/{fileId}:
     get:
-      summary: Download file by ID
+      summary: Stream file by ID
       description: |
         Streams the file named {fileId}.pdf from blob storage. The response is streamed to handle large files efficiently.
-      operationId: downloadFile
+      operationId: streamFile
       tags:
         - files
       parameters:
         - in: path
           name: fileId
           required: true
-          description: The UUID of the file to download. The blob is stored as {fileId}.pdf
+          description: The UUID of the file to stream. The blob is stored as {fileId}.pdf
           schema:
             type: string
             format: uuid
@@ -383,13 +383,6 @@ components:
           example: "2024-01-15"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
-        makeExternalCalls:
-          description: |
-            Temporary flag (to be removed by 2026-03-01). When true, the task will call CaTH and generate/upload PDF.
-            When false (default), external calls are skipped (mock mode).
-          type: boolean
-          default: false
-          example: false
 
     CourtListPublishResponse:
       description: Response containing court list publish status information
