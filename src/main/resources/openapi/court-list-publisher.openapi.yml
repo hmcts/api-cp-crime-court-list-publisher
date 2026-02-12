@@ -234,26 +234,34 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /api/files/stream/{fileId}:
+  /api/files/download/{fileId}:
     get:
-      summary: Stream file by ID
+      summary: Download file by ID
       description: |
-        Streams the file named {fileId}.pdf from blob storage. The response is streamed to handle large files efficiently.
-      operationId: streamFile
+        Downloads the full file named {fileId}.pdf from blob storage in a single shot and returns it as an array of bytes.
+      operationId: downloadFile
       tags:
         - files
       parameters:
         - in: path
           name: fileId
           required: true
-          description: The UUID of the file to stream. The blob is stored as {fileId}.pdf
+          description: The UUID of the file to download. The blob is stored as {fileId}.pdf
           schema:
             type: string
             format: uuid
           example: "123e4567-e89b-12d3-a456-426614174002"
+        - in: header
+          name: Accept
+          required: true
+          description: Must be application/vnd.courtlistpublishing-service.files.download+json
+          schema:
+            type: string
+            enum:
+              - application/vnd.courtlistpublishing-service.files.download+json
       responses:
         '200':
-          description: Successfully streaming the file. Content is application/pdf.
+          description: Successfully downloaded the file. Response body is application/pdf.
           headers:
             Content-Disposition:
               description: Attachment filename as {fileId}.pdf
@@ -262,6 +270,10 @@ paths:
                 example: "attachment; filename=\"123e4567-e89b-12d3-a456-426614174002.pdf\""
           content:
             application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.courtlistpublishing-service.files.download+json:
               schema:
                 type: string
                 format: binary
