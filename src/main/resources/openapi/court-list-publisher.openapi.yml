@@ -482,6 +482,9 @@ components:
         ouCode:
           type: string
           description: Organisation unit code from reference data
+        oucodeL1Code:
+          type: string
+          description: Organisation unit L1 code from reference data
         courtId:
           type: string
           description: Court centre ID from reference data
