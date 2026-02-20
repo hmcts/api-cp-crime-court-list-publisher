@@ -22,7 +22,7 @@ apply {
 }
 
 ext {
-  springBootVersion = "4.0.1"
+  springBootVersion = "4.0.3"
   lombokVersion = "1.18.42"
 }
 
