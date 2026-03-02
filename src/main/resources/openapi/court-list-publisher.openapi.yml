@@ -196,6 +196,73 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /api/public-court-list:
+    get:
+      summary: Get public court list PDF
+      description: |
+        Returns the public court list as a PDF for the given court centre and date range.
+        Data is fetched from the court list (listing) API and rendered via the document generator.
+      operationId: getPublicCourtListPdf
+      tags:
+        - public-court-list
+      parameters:
+        - in: query
+          name: courtCentreId
+          required: true
+          description: The UUID of the court centre
+          schema:
+            type: string
+            format: uuid
+          example: "f8254db1-1683-483e-afb3-b87fde5a0a26"
+        - in: query
+          name: startDate
+          required: true
+          description: Start date in format YYYY-MM-DD
+          schema:
+            type: string
+            format: date
+          example: "2026-02-27"
+        - in: query
+          name: endDate
+          required: true
+          description: End date in format YYYY-MM-DD. Must be on or after startDate.
+          schema:
+            type: string
+            format: date
+          example: "2026-02-27"
+      responses:
+        '200':
+          description: Successfully generated public court list PDF
+          headers:
+            Content-Disposition:
+              description: Attachment filename
+              schema:
+                type: string
+                example: "attachment; filename=\"CourtList.pdf\""
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad request - missing or invalid parameters (e.g. invalid UUID, invalid date format, endDate before startDate)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '502':
+          description: Bad gateway - court list data or document generation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /api/files/list:
     get:
       summary: List files in folder
