@@ -196,13 +196,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /api/court-list-alphabetical/download:
+  /api/alphabetical-court-list:
     get:
       summary: Download alphabetical court list data
       description: Downloads the alphabetical court list data for the given criteria (court centre, date range, list type, etc.).
       operationId: Download Alphabetical Court List Data
       tags:
-        - court-list-alphabetical
+        - alphabetical-court-list
       parameters:
         - in: query
           name: courtCentreId
