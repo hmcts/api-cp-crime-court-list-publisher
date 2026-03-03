@@ -126,6 +126,15 @@ paths:
       operationId: downloadCourtList
       tags:
         - court-list-publish
+      parameters:
+        - in: query
+          name: courtRoomId
+          required: false
+          description: Reference data ID for the court room. Needed for alphabetical label.
+          schema:
+            type: string
+            format: uuid
+          example: "f8254db1-1683-483e-afb3-b87fde5a0a26"
       requestBody:
         required: true
         content:
