@@ -51,6 +51,48 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /api/court-list-publish/publishCourtList:
+    post:
+      summary: Publish SJP court list to CaTH
+      description: |
+        Triggers publishing of an SJP (Single Justice Procedure) court list to Courts and Tribunals Hearings (CaTH).
+        Equivalent to the flow in PubHub: consume SJP list type, transform to CaTH format, and POST to Azure APIM.
+        Use listType to specify either the SJP Pending cases public list (SJP_PUBLISH_LIST) or the SJP Press transparency list (SJP_PRESS_LIST).
+      operationId: publishSjpCourtList
+      tags:
+        - court-list-publish
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublishCourtListRequest"
+          application/vnd.courtlistpublishing-service.publishcourtlist.post+json:
+            schema:
+              $ref: "#/components/schemas/PublishCourtListRequest"
+      responses:
+        '200':
+          description: SJP court list publish request accepted or completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishCourtListResponse"
+            application/vnd.courtlistpublishing-service.publishcourtlist.post+json:
+              schema:
+                $ref: "#/components/schemas/PublishCourtListResponse"
+        '400':
+          description: Bad request - invalid or missing listType
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /api/court-list-publish/publish-status:
     get:
       summary: Get court list publish statuses
@@ -292,6 +334,38 @@ paths:
 
 components:
   schemas:
+
+    SjpListType:
+      description: SJP court list type for publishing to CaTH (Single Justice Procedure)
+      type: string
+      enum:
+        - SJP_PUBLISH_LIST
+        - SJP_PRESS_LIST
+      example: "SJP_PUBLISH_LIST"
+
+    PublishCourtListRequest:
+      description: Request to publish an SJP court list to CaTH. listType determines which list is published (public/pending list or press transparency list).
+      type: object
+      required:
+        - listType
+      properties:
+        listType:
+          $ref: "#/components/schemas/SjpListType"
+
+    PublishCourtListResponse:
+      description: Response after accepting or completing an SJP court list publish request
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the publish request
+          example: "ACCEPTED"
+        listType:
+          $ref: "#/components/schemas/SjpListType"
+        message:
+          type: string
+          description: Optional human-readable message
+          example: "SJP court list publish request accepted"
 
     CourtListType:
       description: The type of court list
