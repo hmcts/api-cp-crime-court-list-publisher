@@ -51,13 +51,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /api/court-list-publish/publishCourtList:
+  /api/court-list-publish/sjp/publishCourtList:
     post:
       summary: Publish SJP court list to CaTH
       description: |
-        Triggers publishing of an SJP (Single Justice Procedure) court list to Courts and Tribunals Hearings (CaTH).
-        Equivalent to the flow in PubHub: consume court list type, transform to CaTH format, and POST to Azure APIM.
-        Use listType with value SJP_PUBLISH_LIST (SJP Pending cases public list) or SJP_PRESS_LIST (SJP Press transparency list).
+        SJP-specific endpoint. Accepts the full payload from SJP (Single Justice Procedure) and publishes the court list to Courts and Tribunals Hearings (CaTH).
+        The request body carries a large SJP payload (e.g. listType, language, requestType, listPayload with readyCases and metadata). The service transforms it to CaTH format and POSTs to Azure APIM, equivalent to the flow in PubHub.
+        listType (court list type) must be SJP_PUBLISH_LIST (SJP Pending cases public list) or SJP_PRESS_LIST (SJP Press transparency list).
       operationId: publishSjpCourtList
       tags:
         - court-list-publish
@@ -67,7 +67,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PublishCourtListRequest"
-          application/vnd.courtlistpublishing-service.publishcourtlist.post+json:
+          application/vnd.courtlistpublishing-service.sjp.post+json:
             schema:
               $ref: "#/components/schemas/PublishCourtListRequest"
       responses:
@@ -77,11 +77,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PublishCourtListResponse"
-            application/vnd.courtlistpublishing-service.publishcourtlist.post+json:
+            application/vnd.courtlistpublishing-service.sjp.post+json:
               schema:
                 $ref: "#/components/schemas/PublishCourtListResponse"
         '400':
-          description: Bad request - invalid or missing listType
+          description: Bad request - invalid or missing listType (or invalid SJP payload)
           content:
             application/json:
               schema:
