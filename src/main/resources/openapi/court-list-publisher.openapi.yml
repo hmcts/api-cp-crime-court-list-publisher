@@ -188,28 +188,61 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 
   /api/court-list-publish/download:
-    post:
-      summary: Download court list (e.g. PDF)
+    get:
+      summary: Download court list (PDF or Word)
       description: |
-        Returns the court list as a file (e.g. PDF) for the given court centre, court list type, and date range.
-        Use courtListType to distinguish the kind of list (e.g. PUBLIC, ONLINE_PUBLIC, STANDARD). Data is fetched
-        from the court list (listing) API and rendered via the document generator. Shared by multiple consumers;
-        request type is distinguished by courtListType.
+        Returns the court list as a file (PDF for PUBLIC, BENCH, ALPHABETICAL; Word for USHERS_CROWN, USHERS_MAGISTRATE)
+        for the given court centre, court list type, and date range. Data is fetched from the court list (listing) API
+        and rendered via the document generator. Shared by multiple consumers; request type is distinguished by
+        courtListType. Caller must send the CJSCPPUID header.
       operationId: downloadCourtList
       tags:
         - court-list-publish
-      requestBody:
-        required: true
-        content:
-          application/vnd.courtlistpublishing-service.download.post+json:
-            schema:
-              $ref: "#/components/schemas/CourtListDownloadRequest"
+      parameters:
+        - in: query
+          name: courtCentreId
+          required: true
+          description: The UUID of the court centre
+          schema:
+            type: string
+            format: uuid
+          example: "f8254db1-1683-483e-afb3-b87fde5a0a26"
+        - in: query
+          name: startDate
+          required: true
+          description: Hearing start date in format 'YYYY-MM-DD'
+          schema:
+            type: string
+            format: date
+          example: "2024-01-15"
+        - in: query
+          name: endDate
+          required: true
+          description: Hearing end date in format 'YYYY-MM-DD'. Must be on or after startDate.
+          schema:
+            type: string
+            format: date
+          example: "2024-01-15"
+        - in: query
+          name: courtListType
+          required: true
+          description: The kind of court list to download. PUBLIC, BENCH, ALPHABETICAL produce PDF; USHERS_CROWN, USHERS_MAGISTRATE produce Word.
+          schema:
+            $ref: "#/components/schemas/CourtListType"
+          example: "PUBLIC"
+        - in: query
+          name: courtRoomId
+          required: false
+          description: Reference data ID for the court room. Optional; needed for alphabetical label.
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
-          description: Successfully generated court list file (e.g. PDF)
+          description: Successfully generated court list file (PDF or Word)
           headers:
             Content-Disposition:
-              description: Attachment filename
+              description: Attachment filename (CourtList.pdf or CourtList.docx)
               schema:
                 type: string
                 example: "attachment; filename=\"CourtList.pdf\""
@@ -218,8 +251,12 @@ paths:
               schema:
                 type: string
                 format: binary
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
         '400':
-          description: Bad request - invalid request body or missing required fields (e.g. invalid UUID, invalid date format, endDate before startDate)
+          description: Bad request - missing or invalid query parameters (e.g. invalid UUID, invalid date format, endDate before startDate, missing CJSCPPUID header)
           content:
             application/json:
               schema:
@@ -441,38 +478,6 @@ components:
           example: "2024-01-15"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
-
-    CourtListDownloadRequest:
-      description: Request to download a court list (e.g. as PDF). courtListType distinguishes the kind of list (PUBLIC, ONLINE_PUBLIC, STANDARD, etc.) so multiple consumers can use this endpoint without separate operations.
-      type: object
-      required:
-        - courtCentreId
-        - courtListType
-        - startDate
-        - endDate
-      properties:
-        courtCentreId:
-          description: The UUID of the court centre
-          type: string
-          format: uuid
-          example: "123e4567-e89b-12d3-a456-426614174001"
-        startDate:
-          description: Hearing start date in format 'YYYY-MM-DD'
-          type: string
-          format: date
-          example: "2024-01-15"
-        endDate:
-          description: Hearing end date in format 'YYYY-MM-DD'. Must be on or after startDate.
-          type: string
-          format: date
-          example: "2024-01-15"
-        courtListType:
-          $ref: "#/components/schemas/CourtListType"
-        courtRoomId:
-          description: Reference data ID for the court room. Optional; needed for alphabetical label.
-          type: string
-          format: uuid
-          example: "f8254db1-1683-483e-afb3-b87fde5a0a26"
 
     CourtListPublishResponse:
       description: Response containing court list publish status information
