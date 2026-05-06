@@ -232,9 +232,9 @@ paths:
             format: date
           example: "2024-01-15"
         - in: query
-          name: courtListType
+          name: listId
           required: true
-          description: The kind of court list to download. PUBLIC, BENCH, ALPHABETICAL produce PDF; USHERS_CROWN, USHERS_MAGISTRATE produce Word.
+          description: The kind of court list to download (matches the listing service's listId). PUBLIC, BENCH, ALPHABETICAL produce PDF; USHERS_CROWN, USHERS_MAGISTRATE produce Word.
           schema:
             $ref: "#/components/schemas/CourtListType"
           example: "PUBLIC"
