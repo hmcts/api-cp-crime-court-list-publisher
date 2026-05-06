@@ -199,6 +199,14 @@ paths:
       tags:
         - court-list-publish
       parameters:
+        - in: header
+          name: Accept
+          required: true
+          description: Must be application/vnd.courtlistpublishing-service.download.get+json (used by the authz filter to identify the action).
+          schema:
+            type: string
+            enum:
+              - application/vnd.courtlistpublishing-service.download.get+json
         - in: query
           name: courtCentreId
           required: true
@@ -252,6 +260,10 @@ paths:
                 type: string
                 format: binary
             application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+            application/vnd.courtlistpublishing-service.download.get+json:
               schema:
                 type: string
                 format: binary
