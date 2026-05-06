@@ -191,14 +191,22 @@ paths:
     get:
       summary: Download court list (PDF or Word)
       description: |
-        Returns the court list as a file (PDF for PUBLIC, BENCH, ALPHABETICAL; Word for USHERS_CROWN, USHERS_MAGISTRATE)
-        for the given court centre, court list type, and date range. Data is fetched from the court list (listing) API
-        and rendered via the document generator. Shared by multiple consumers; request type is distinguished by
-        courtListType. Caller must send the CJSCPPUID header.
+        Returns the court list as a file (PDF for PUBLIC, BENCH, ALPHABETICAL, JUDGE; Word for USHERS_CROWN,
+        USHERS_MAGISTRATE) for the given court centre, court list type, and date range. Data is fetched from the
+        court list (listing) API and rendered via the document generator. Shared by multiple consumers; request
+        type is distinguished by courtListType. Caller must send the CJSCPPUID header.
       operationId: downloadCourtList
       tags:
         - court-list-publish
       parameters:
+        - in: header
+          name: Accept
+          required: true
+          description: Must be application/vnd.courtlistpublishing-service.download.get+json (used by the authz filter to identify the action).
+          schema:
+            type: string
+            enum:
+              - application/vnd.courtlistpublishing-service.download.get+json
         - in: query
           name: courtCentreId
           required: true
@@ -226,7 +234,7 @@ paths:
         - in: query
           name: courtListType
           required: true
-          description: The kind of court list to download. PUBLIC, BENCH, ALPHABETICAL produce PDF; USHERS_CROWN, USHERS_MAGISTRATE produce Word.
+          description: The kind of court list to download. PUBLIC, BENCH, ALPHABETICAL, JUDGE produce PDF; USHERS_CROWN, USHERS_MAGISTRATE produce Word.
           schema:
             $ref: "#/components/schemas/CourtListType"
           example: "PUBLIC"
@@ -252,6 +260,10 @@ paths:
                 type: string
                 format: binary
             application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+            application/vnd.courtlistpublishing-service.download.get+json:
               schema:
                 type: string
                 format: binary
