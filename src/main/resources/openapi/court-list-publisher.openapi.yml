@@ -245,6 +245,18 @@ paths:
           schema:
             type: string
             format: uuid
+        - in: query
+          name: restricted
+          required: false
+          description: |
+            When true, requests the restricted-information variant of the list
+            (court-staff-only view that includes restricted hearings/defendants).
+            When false (default), produces the standard list with restricted
+            entries redacted.
+          schema:
+            type: boolean
+            default: false
+          example: false
       responses:
         '200':
           description: Successfully generated court list file (PDF or Word)
@@ -490,6 +502,15 @@ components:
           example: "2024-01-15"
         courtListType:
           $ref: "#/components/schemas/CourtListType"
+        restricted:
+          description: |
+            When true, requests the restricted-information variant of the list
+            (court-staff-only view that includes restricted hearings/defendants).
+            When false (default), produces the standard list with restricted
+            entries redacted.
+          type: boolean
+          default: false
+          example: false
 
     CourtListPublishResponse:
       description: Response containing court list publish status information
