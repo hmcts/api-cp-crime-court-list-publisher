@@ -170,11 +170,11 @@ paths:
       tags:
         - court-list-publish
       responses:
-        '200':
+        '202':
           description: |
             `success` is true if cleanup completed; false if a fatal error occurred (e.g. database failure).
           content:
-            application/vnd.courtlistpublishing-service.publish-status-cleanup.get+json:
+            application/vnd.courtlistpublishing-service.publish-status-cleanup+json:
               schema:
                 $ref: "#/components/schemas/PublishStatusCleanupResponse"
             application/json:
@@ -200,18 +200,18 @@ paths:
       requestBody:
         required: false
         content:
-          application/vnd.courtlistpublishing-service.publish-status-cleanup.post+json:
+          application/vnd.courtlistpublishing-service.publish-status-cleanup+json:
             schema:
               type: object
           application/json:
             schema:
               type: object
       responses:
-        '200':
+        '202':
           description: |
             `success` is true if cleanup completed; false if a fatal error occurred (e.g. database failure).
           content:
-            application/vnd.courtlistpublishing-service.publish-status-cleanup.post+json:
+            application/vnd.courtlistpublishing-service.publish-status-cleanup+json:
               schema:
                 $ref: "#/components/schemas/PublishStatusCleanupResponse"
             application/json:
