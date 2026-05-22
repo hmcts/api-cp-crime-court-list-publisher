@@ -197,12 +197,21 @@ paths:
       operationId: publishStatusCleanupPost
       tags:
         - court-list-publish
+      requestBody:
+        required: false
+        content:
+          application/vnd.courtlistpublishing-service.publish-status-cleanup.post+json:
+            schema:
+              type: object
+          application/json:
+            schema:
+              type: object
       responses:
         '200':
           description: |
             `success` is true if cleanup completed; false if a fatal error occurred (e.g. database failure).
           content:
-            application/vnd.courtlistpublishing-service.publish-status-cleanup.get+json:
+            application/vnd.courtlistpublishing-service.publish-status-cleanup.post+json:
               schema:
                 $ref: "#/components/schemas/PublishStatusCleanupResponse"
             application/json:
