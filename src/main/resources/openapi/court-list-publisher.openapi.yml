@@ -194,18 +194,9 @@ paths:
         environment variable `PUBLISH_STATUS_CLEANUP_DAYS` (default **90** days); records with
         `last_updated` on or before (now − N days) are removed.
         **System Users only** (not other publishing roles).
-      operationId: publishStatusCleanup
+      operationId: publishStatusCleanupPost
       tags:
         - court-list-publish
-      requestBody:
-        required: false
-        content:
-          application/vnd.courtlistpublishing-service.publish-status-cleanup+json:
-            schema:
-              type: object
-          application/json:
-            schema:
-              type: object
       responses:
         '202':
           description: |
