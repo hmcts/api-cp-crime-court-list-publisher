@@ -158,34 +158,6 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 
   /api/court-list-publish/publish-status-cleanup:
-    get:
-      summary: Cleanup old publish status records and blob files
-      description: |
-        Deletes rows from the publish-status table (and associated PDF files in blob storage) where
-        `last_updated` is older than the retention period. The retention period is configured via the
-        environment variable `PUBLISH_STATUS_CLEANUP_DAYS` (default **90** days); records with
-        `last_updated` on or before (now − N days) are removed.
-        **System Users only** (not other publishing roles).
-      operationId: publishStatusCleanup
-      tags:
-        - court-list-publish
-      responses:
-        '202':
-          description: |
-            `success` is true if cleanup completed; false if a fatal error occurred (e.g. database failure).
-          content:
-            application/vnd.courtlistpublishing-service.publish-status-cleanup+json:
-              schema:
-                $ref: "#/components/schemas/PublishStatusCleanupResponse"
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PublishStatusCleanupResponse"
-        '403':
-          description: Forbidden — caller is not a System User
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
     post:
       summary: Cleanup old publish status records and blob files
       description: |
@@ -194,7 +166,7 @@ paths:
         environment variable `PUBLISH_STATUS_CLEANUP_DAYS` (default **90** days); records with
         `last_updated` on or before (now − N days) are removed.
         **System Users only** (not other publishing roles).
-      operationId: publishStatusCleanupPost
+      operationId: publishStatusCleanup
       tags:
         - court-list-publish
       responses:
