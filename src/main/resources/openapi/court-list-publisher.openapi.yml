@@ -1,7 +1,11 @@
 openapi: 3.0.3
 servers:
-  - description: APIHub API Auto Mocking Scheduling and Listing court-schedule
-    url: https://virtserver.swaggerhub.com/HMCTS-DTS//api-cp-crime-court-list-publisher/0.0.0
+  - description: Common Platform API Crime Court List Publisher
+    url: https://api-cp-crime-court-list-publisher.net/{version}
+    variables:
+      version:
+        default: 0.0.0
+        description: API version; matches the spec info.version
 
 info:
   title: Common Platform API Crime Court List Publisher
