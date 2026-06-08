@@ -7,7 +7,7 @@ java {
 sourceSets {
   main {
     java {
-      srcDir "$buildDir/generated/src/main/java"
+      srcDir layout.buildDirectory.dir("generated/src/main/java")
     }
   }
 }
