@@ -398,10 +398,15 @@ components:
           example: false
 
     PublishCourtListRequest:
-      description: Request to publish an SJP court list to CaTH. listType determines which list is published (SJP_PUBLISH_LIST for public/pending list or SJP_PRESS_LIST for press transparency list).
+      description: >
+        Request to publish an SJP court list to CaTH. listType selects which list is published
+        (SJP_PUBLISH_LIST for the public/pending list, SJP_PRESS_LIST for the press transparency list).
+        language and requestType are optional overrides; when omitted, language is derived from
+        listPayload.isWelsh and requestType defaults to null.
       type: object
       required:
         - listType
+        - listPayload
       properties:
         listType:
           $ref: "#/components/schemas/SjpListType"
