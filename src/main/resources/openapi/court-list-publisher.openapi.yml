@@ -61,7 +61,7 @@ paths:
       description: |
         SJP-specific endpoint. Accepts the full payload from SJP (Single Justice Procedure) and publishes the court list to Courts and Tribunals Hearings (CaTH).
         The request body carries a large SJP payload (e.g. listType, language, requestType, listPayload with readyCases and metadata). The service transforms it to CaTH format and POSTs to Azure APIM, equivalent to the flow in PubHub.
-        listType (court list type) must be SJP_PUBLISH_LIST (SJP Pending cases public list) or SJP_PRESS_LIST (SJP Press transparency list).
+        listType must be SJP_PUBLISH_LIST (pending cases public list, event: public.sjp.pending-cases-public-list-generated) or SJP_PRESS_LIST (press list, event: public.sjp.pending-cases-press-list-generated). The press transparency report (public.sjp.press-transparency-report-generated) is out of scope and remains in Staging PubHub.
       operationId: publishSjpCourtList
       tags:
         - court-list-publish
@@ -362,7 +362,11 @@ components:
   schemas:
 
     SjpListType:
-      description: SJP list variant for the SJP publish endpoint (which SJP list to publish to CaTH).
+      description: >
+        SJP list variant for the SJP publish endpoint.
+        SJP_PUBLISH_LIST handles public.sjp.pending-cases-public-list-generated;
+        SJP_PRESS_LIST handles public.sjp.pending-cases-press-list-generated.
+        The press transparency report (public.sjp.press-transparency-report-generated) is out of scope.
       type: string
       enum:
         - SJP_PUBLISH_LIST
@@ -398,7 +402,11 @@ components:
           example: false
 
     PublishCourtListRequest:
-      description: Request to publish an SJP court list to CaTH. listType determines which list is published (SJP_PUBLISH_LIST for public/pending list or SJP_PRESS_LIST for press transparency list).
+      description: >
+        Request to publish an SJP court list to CaTH.
+        SJP_PUBLISH_LIST publishes the pending cases public list (public.sjp.pending-cases-public-list-generated).
+        SJP_PRESS_LIST publishes the press list (public.sjp.pending-cases-press-list-generated).
+        The press transparency report (public.sjp.press-transparency-report-generated) is out of scope.
       type: object
       required:
         - listType
