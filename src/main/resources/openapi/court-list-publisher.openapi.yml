@@ -302,6 +302,83 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /api/court-list-publish/prison/download:
+    get:
+      summary: Download prison court list (PDF)
+      description: |
+        Returns the prison court list ("Daily List for Prison Service") as a PDF for the given court centre
+        and date range. Prison data is fetched from progression using the prison court list media type and
+        rendered via the document generator. This is a dedicated path (separate from /download) so that
+        access control can restrict it to prison-list roles only — mirroring progression's
+        prison.court.list.data authorisation split. Caller must send the CJSCPPUID header.
+      operationId: downloadPrisonCourtList
+      tags:
+        - court-list-publish
+      parameters:
+        - in: query
+          name: courtCentreId
+          required: true
+          description: The UUID of the court centre
+          schema:
+            type: string
+            format: uuid
+          example: "f8254db1-1683-483e-afb3-b87fde5a0a26"
+        - in: query
+          name: startDate
+          required: true
+          description: Hearing start date in format 'YYYY-MM-DD'
+          schema:
+            type: string
+            format: date
+          example: "2024-01-15"
+        - in: query
+          name: endDate
+          required: true
+          description: Hearing end date in format 'YYYY-MM-DD'. Must be on or after startDate.
+          schema:
+            type: string
+            format: date
+          example: "2024-01-15"
+        - in: query
+          name: courtRoomId
+          required: false
+          description: Reference data ID for the court room. Optional.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successfully generated prison court list PDF
+          headers:
+            Content-Disposition:
+              description: Attachment filename (CourtList.pdf)
+              schema:
+                type: string
+                example: "attachment; filename=\"CourtList.pdf\""
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad request - missing or invalid query parameters (e.g. invalid UUID, invalid date format, endDate before startDate, missing CJSCPPUID header)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '502':
+          description: Bad gateway - court list data or document generation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /api/files/download/{fileId}:
     get:
       summary: Download file by ID
