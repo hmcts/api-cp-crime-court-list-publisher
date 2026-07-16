@@ -315,6 +315,14 @@ paths:
       tags:
         - court-list-publish
       parameters:
+        - in: header
+          name: Accept
+          required: true
+          description: Must be application/vnd.courtlistpublishing-service.prison-download.get+json (used by the authz filter to identify the action and restrict access to prison-list roles).
+          schema:
+            type: string
+            enum:
+              - application/vnd.courtlistpublishing-service.prison-download.get+json
         - in: query
           name: courtCentreId
           required: true
@@ -357,6 +365,10 @@ paths:
                 example: "attachment; filename=\"CourtList.pdf\""
           content:
             application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.courtlistpublishing-service.prison-download.get+json:
               schema:
                 type: string
                 format: binary
