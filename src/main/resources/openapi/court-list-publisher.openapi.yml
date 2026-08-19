@@ -452,14 +452,20 @@ components:
 
     SjpListType:
       description: >
-        SJP list variant for the SJP publish endpoint.
-        SJP_PUBLIC_LIST handles public.sjp.pending-cases-public-list-generated;
-        SJP_PRESS_LIST handles public.sjp.pending-cases-press-list-generated.
+        SJP list variant for the SJP publish endpoint. Mirrors the CaTH
+        (pip-data-management) ListType vocabulary one-to-one, so the value is
+        forwarded to CaTH as DtsMeta.listType without further mapping.
+        Audience (PUBLIC/PRESS) and request type (FULL/DELTA) are encoded here.
+        Language is NOT encoded here - it is carried separately by the
+        `language` field, matching CaTH's own separation of listType and
+        language metadata.
         The press transparency report (public.sjp.press-transparency-report-generated) is out of scope.
       type: string
       enum:
         - SJP_PUBLIC_LIST
         - SJP_PRESS_LIST
+        - SJP_DELTA_PUBLIC_LIST
+        - SJP_DELTA_PRESS_LIST
       example: "SJP_PUBLIC_LIST"
 
     SjpListPayload:
@@ -510,7 +516,12 @@ components:
           example: "ENGLISH"
         requestType:
           type: string
-          description: Optional request type passed through to CaTH DtsMeta (e.g. "FULL").
+          deprecated: true
+          description: >
+            Deprecated - FULL/DELTA is now encoded in listType via the
+            SJP_DELTA_* variants. Retained for backwards compatibility and
+            still passed through to CaTH DtsMeta.requestType. Ignored when it
+            contradicts listType.
           example: "FULL"
         listPayload:
           $ref: "#/components/schemas/SjpListPayload"
@@ -541,7 +552,24 @@ components:
           description: True if cleanup completed successfully; false if a fatal error occurred
 
     CourtListType:
-      description: The type of court list
+      description: >
+        The type of court list. Used both as the download/publish request
+        discriminator and as part of the natural key of a publish-status row
+        (court_centre_id, publish_date, court_list_type).
+
+        The SJP_* values fuse audience (PUBLIC/PRESS), request type
+        (FULL/DELTA) and language (ENGLISH/WELSH) because SJP is national -
+        it has no court centre, and all SJP publishes for a day share the same
+        publish_date, so court_list_type is the only discriminator available to
+        keep the eight daily SJP publishes on separate status rows.
+
+        These SJP_* values are NOT the CaTH wire vocabulary. See SjpListType,
+        which is what is forwarded to CaTH as DtsMeta.listType.
+
+        DEPRECATED: the bare `SJP` value predates the SJP_* variants, is not
+        referenced by any implementation, and cannot distinguish the eight
+        daily SJP publishes. Use the SJP_* variants instead. It is retained
+        only so existing consumers do not break.
       type: string
       enum:
         - ALPHABETICAL
@@ -558,6 +586,14 @@ components:
         - FINAL
         - FIRM
         - SJP
+        - SJP_PUBLIC_FULL_ENGLISH
+        - SJP_PUBLIC_FULL_WELSH
+        - SJP_PUBLIC_DELTA_ENGLISH
+        - SJP_PUBLIC_DELTA_WELSH
+        - SJP_PRESS_FULL_ENGLISH
+        - SJP_PRESS_FULL_WELSH
+        - SJP_PRESS_DELTA_ENGLISH
+        - SJP_PRESS_DELTA_WELSH
       example: "STANDARD"
 
     Status:
