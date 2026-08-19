@@ -558,8 +558,6 @@ components:
         - FINAL
         - FIRM
         - SJP
-        - SJP_PUBLIC_LIST
-        - SJP_PRESS_LIST
       example: "STANDARD"
 
     Status:
