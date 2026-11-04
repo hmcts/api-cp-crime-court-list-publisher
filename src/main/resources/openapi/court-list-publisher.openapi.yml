@@ -97,6 +97,44 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /api/court-list-publish/crown/publish:
+    post:
+      summary: Publish a Crown court list to CaTH
+      description: |
+        Crown-specific endpoint. Accepts a request to publish the court list of a Crown court centre to Courts and Tribunals Hearings (CaTH)
+        in one of the three Crown formats. The work runs asynchronously; the outcome is recorded on the court list publish status.
+        courtListType selects the format: FINAL publishes the daily list (CROWN_DAILY_LIST), WARN the advance list (CROWN_ADVANCE_LIST)
+        and FIRM the firm list (CROWN_FIRM_LIST). DRAFT lists are not published to CaTH. startDate and endDate must be equal for FINAL;
+        WARN and FIRM cover a week. The court centre must be a Crown court. Caller must send the CJSCPPUID header.
+      operationId: publishCrownCourtList
+      tags:
+        - crown-court-list-publish
+      requestBody:
+        required: true
+        content:
+          application/vnd.courtlistpublishing-service.crown.post+json:
+            schema:
+              $ref: "#/components/schemas/CourtListPublishRequest"
+      responses:
+        '200':
+          description: Crown court list publish request accepted
+          content:
+            application/vnd.courtlistpublishing-service.crown.post+json:
+              schema:
+                $ref: "#/components/schemas/CourtListPublishResponse"
+        '400':
+          description: Bad request - invalid request body, or a courtListType that cannot be published as a Crown list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /api/court-list-publish/publish-status:
     get:
       summary: Get court list publish statuses
