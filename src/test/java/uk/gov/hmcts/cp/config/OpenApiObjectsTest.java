@@ -2,6 +2,8 @@ package uk.gov.hmcts.cp.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.cp.openapi.api.CourtListPublishApi;
+import uk.gov.hmcts.cp.openapi.api.CrownCourtListPublishApi;
 import uk.gov.hmcts.cp.openapi.model.ErrorResponse;
 
 
@@ -12,5 +14,12 @@ class OpenApiObjectsTest {
     @Test
     void generated_error_response_should_have_expected_fields() {
         assertThat(ErrorResponse.class).hasDeclaredMethods("error", "message", "details", "traceId");
+    }
+
+    @Test
+    void crown_publish_operation_should_have_its_own_api_interface() {
+        assertThat(CrownCourtListPublishApi.class).hasDeclaredMethods("publishCrownCourtList");
+        assertThat(CourtListPublishApi.class.getDeclaredMethods())
+                .noneMatch(method -> method.getName().equals("publishCrownCourtList"));
     }
 }
