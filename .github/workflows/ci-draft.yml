@@ -120,7 +120,6 @@ jobs:
       - name: Gradle Publish
         env:
           ARTEFACT_VERSION: ${{ needs.Artefact-Version.outputs.artefact_version }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AZURE_DEVOPS_ARTIFACT_USERNAME: ${{ secrets.AZURE_DEVOPS_ARTIFACT_USERNAME }}
           AZURE_DEVOPS_ARTIFACT_TOKEN: ${{ secrets.AZURE_DEVOPS_ARTIFACT_TOKEN }}
           JAVA_VERSION: ${{ matrix.java }}
@@ -129,8 +128,5 @@ jobs:
           
           gradle build -x test publish \
             -DAPI_SPEC_VERSION=$ARTEFACT_VERSION \
-            -DGITHUB_REPOSITORY=${{ github.repository }} \
-            -DGITHUB_ACTOR=${{ github.actor }} \
-            -DGITHUB_TOKEN=$GITHUB_TOKEN \
             -DAZURE_DEVOPS_ARTIFACT_USERNAME=$AZURE_DEVOPS_ARTIFACT_USERNAME \
             -DAZURE_DEVOPS_ARTIFACT_TOKEN=$AZURE_DEVOPS_ARTIFACT_TOKEN

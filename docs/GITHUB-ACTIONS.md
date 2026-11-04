@@ -3,7 +3,7 @@
 | Workflow Name                        | Purpose                                                                                                       | Trigger |
 |---------------------------------------|---------------------------------------------------------------------------------------------------------------|---------|
 | `ci-draft.yml`                        | Builds the project, updates OpenAPI spec with draft version, and publishes artefact for pull requests. (*)    | `pull_request` |
-| `ci-released.yml`                     | On release, updates OpenAPI spec with release version, builds, and publishes artefact to GitHub Packages. (*) | `release` |
+| `ci-released.yml`                     | On release, updates OpenAPI spec with release version, builds, and publishes artefact to Azure Artifacts. (*) | `release` |
 | `code-analysis.yml`                   | Run PMD CLI for static code analysis and upload an HTML report if violations are found.                       | `pull_request`, `push` |
 | `codeql.yml`                          | Run GitHub CodeQL to analyse Java code for security and quality issues                                        | `pull_request`, `schedule` |
 | `lint-openapi.yml`                    | Lints and validates OpenAPI documents and JSON schema example responses on pull requests.                     | `pull_request` |
