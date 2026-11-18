@@ -22,7 +22,22 @@ paths:
   /api/court-list-publish/publish:
     post:
       summary: Publish court list
-      description: Creates or updates a court list publish status
+      description: |
+        Creates or updates a court list publish status and queues the publish. The request Content-Type selects the flow:
+
+        - application/vnd.courtlistpublishing-service.publish.post+json (magistrates' and other lists): publishes the list
+          to Courts and Tribunals Hearings (CaTH) and generates the PDF. courtListType FINAL, FIRM and WARN are rejected
+          with 400; they are published with the Crown media type.
+        - application/vnd.courtlistpublishing-service.crown.publish.post+json (Crown court lists): publishes the court
+          list of a Crown court centre to CaTH in one of the three Crown formats. courtListType selects the format:
+          FINAL publishes the daily list (CROWN_DAILY_LIST), WARN the advance list (CROWN_ADVANCE_LIST) and FIRM the firm
+          list (CROWN_FIRM_LIST); any other courtListType is rejected with 400. DRAFT lists are not published to CaTH.
+          startDate and endDate must be equal for FINAL; WARN and FIRM start on a Monday and cover at most a week. The
+          court centre must be a Crown court. A publish of the same list that is still in progress is rejected with 400.
+          No PDF is generated.
+
+        Both flows run asynchronously; the outcome is recorded on the court list publish status. The response uses the
+        request's media type. Caller must send the CJSCPPUID header.
       operationId: publishCourtList
       tags:
         - court-list-publish
@@ -32,6 +47,9 @@ paths:
           application/vnd.courtlistpublishing-service.publish.post+json:
             schema:
               $ref: "#/components/schemas/CourtListPublishRequest"
+          application/vnd.courtlistpublishing-service.crown.publish.post+json:
+            schema:
+              $ref: "#/components/schemas/CourtListPublishRequest"
       responses:
         '200':
           description: Successfully created or updated court list publish status
@@ -39,11 +57,17 @@ paths:
             application/vnd.courtlistpublishing-service.publish.post+json:
               schema:
                 $ref: "#/components/schemas/CourtListPublishResponse"
+            application/vnd.courtlistpublishing-service.crown.publish.post+json:
+              schema:
+                $ref: "#/components/schemas/CourtListPublishResponse"
             application/json:
               schema:
                 $ref: "#/components/schemas/CourtListPublishResponse"
         '400':
-          description: Bad request - invalid request body or missing required fields
+          description: |
+            Bad request - invalid request body or missing required fields, a courtListType that the request's media type
+            cannot publish, invalid Crown list dates, a court centre that is not a Crown court, or a Crown list publish
+            that is already in progress
           content:
             application/json:
               schema:
@@ -86,44 +110,6 @@ paths:
                 $ref: "#/components/schemas/PublishCourtListResponse"
         '400':
           description: Bad request - invalid or missing listType (or invalid SJP payload)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
-  /api/court-list-publish/crown/publish:
-    post:
-      summary: Publish a Crown court list to CaTH
-      description: |
-        Crown-specific endpoint. Accepts a request to publish the court list of a Crown court centre to Courts and Tribunals Hearings (CaTH)
-        in one of the three Crown formats. The work runs asynchronously; the outcome is recorded on the court list publish status.
-        courtListType selects the format: FINAL publishes the daily list (CROWN_DAILY_LIST), WARN the advance list (CROWN_ADVANCE_LIST)
-        and FIRM the firm list (CROWN_FIRM_LIST). DRAFT lists are not published to CaTH. startDate and endDate must be equal for FINAL;
-        WARN and FIRM cover a week. The court centre must be a Crown court. Caller must send the CJSCPPUID header.
-      operationId: publishCrownCourtList
-      tags:
-        - crown-court-list-publish
-      requestBody:
-        required: true
-        content:
-          application/vnd.courtlistpublishing-service.crown.post+json:
-            schema:
-              $ref: "#/components/schemas/CourtListPublishRequest"
-      responses:
-        '200':
-          description: Crown court list publish request accepted
-          content:
-            application/vnd.courtlistpublishing-service.crown.post+json:
-              schema:
-                $ref: "#/components/schemas/CourtListPublishResponse"
-        '400':
-          description: Bad request - invalid request body, or a courtListType that cannot be published as a Crown list
           content:
             application/json:
               schema:
